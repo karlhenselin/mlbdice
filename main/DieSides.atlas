@@ -1,0 +1,21 @@
+images {
+  image: "/assets/dice/1.png"
+}
+images {
+  image: "/assets/dice/2.png"
+}
+images {
+  image: "/assets/dice/3.png"
+}
+images {
+  image: "/assets/dice/4.png"
+}
+images {
+  image: "/assets/dice/5.png"
+}
+images {
+  image: "/assets/dice/6.png"
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

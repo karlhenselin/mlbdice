@@ -1,0 +1,27 @@
+images {
+  image: "/assets/app_icons/icon_180.png"
+}
+images {
+  image: "/assets/dice/1ToRoll.png"
+}
+images {
+  image: "/assets/dice/2toRoll.png"
+}
+images {
+  image: "/assets/baseballBlueBat.png"
+}
+images {
+  image: "/assets/baseballRedBat.png"
+}
+images {
+  image: "/assets/scoreboard.png"
+}
+images {
+  image: "/assets/blue.png"
+}
+images {
+  image: "/assets/red.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

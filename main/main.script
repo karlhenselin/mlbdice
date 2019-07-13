@@ -1,0 +1,15 @@
+local goput = require "main.goput"
+
+function init(self)
+
+	msg.post(".", "acquire_input_focus")
+	msg.post("1b#sprite","disable")
+	msg.post("2b#sprite","disable")
+	msg.post("3b#sprite","disable")
+
+end
+
+
+
+function final(self)
+end
