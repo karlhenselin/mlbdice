@@ -6,7 +6,9 @@ function init(self)
 	msg.post("1b#sprite","disable")
 	msg.post("2b#sprite","disable")
 	msg.post("3b#sprite","disable")
-
+	label.set_text("#Status", "Play Ball!")
+	label.set_text("#Todo", "Roll for Pitch")
+	
 end
 
 

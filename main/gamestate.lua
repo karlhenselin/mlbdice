@@ -81,8 +81,6 @@ end
 
 local function walk()
 	label.set_text("#Status", "Walk")
-	
-	
 	state["CurrentState"] = "Pitch"
 	clearCount()
 	local bases = state["BaseStatus"];
@@ -131,7 +129,6 @@ local function out()
 	throw()
 end
 local function strike()
-	msg.post("go#dicescript", "clearDice", {player = M.otherPlayer()})
 	label.set_text("#Status", "Strike")
 	state["CurrentState"] = "Pitch"
 	state["Strikes"] = state["Strikes"] + 1
