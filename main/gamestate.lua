@@ -112,8 +112,15 @@ local function threeOuts()
 		state["Inning"] = state["Inning"] + 1
 		label.set_text("scoreboard#inning", state["Inning"])
 	end
-	if state["Inning"] == 4 then
+	if state["Inning"] == 2 then
 		state["CurrentState"] = "Done"
+		if state["Scores"][1] > state["Scores"][2] then
+			setStatus("Guest Wins")
+		elseif state["Scores"][2] > state["Scores"][1] then
+			setStatus("Home Wins")
+		else
+			setStatus("Tie!")
+		end
 	end
 	state["Player"] = M.otherPlayer();
 	if state["Player"] == 1 then
@@ -189,9 +196,10 @@ end
 
 local function ball()
 	msg.post("go#dicescript", "clearDice", {player = M.otherPlayer()})
-	setStatus( "Ball")
-	state["Balls"] = state["Balls"] + 1
 	label.set_text("scoreboard#balls", state["Balls"])
+	setStatus( "Ball" .. state["Balls"])
+	state["Balls"] = state["Balls"] + 1
+	
 	if state["Balls"] == 4 then
 		walk()
 	end
