@@ -25,8 +25,14 @@ local state = {
 	BaseStatus={0,0,0},
 	Scores={0,0}
 }
+local labelText = ""
 
-function changeBase()
+local function setStatus(text)
+	labelText=text
+	label.set_text("#Status", text)
+end
+
+local function changeBase()
 	local animation = "red"
 	if state["Player"] == 1 then
 		animation = "blue"
@@ -50,7 +56,7 @@ function changeBase()
 		msg.post("3b#sprite","enable")
 		msg.post("3b#sprite", "play_animation", {id = hash(animation)})
 	end
-	
+
 end
 function M.GetState()
 	return state
@@ -80,7 +86,7 @@ local function score(points)
 end
 
 local function walk()
-	label.set_text("#Status", "Walk")
+	setStatus( "Walk")
 	state["CurrentState"] = "Pitch"
 	clearCount()
 	local bases = state["BaseStatus"];
@@ -118,7 +124,7 @@ local function threeOuts()
 end
 
 local function out()
-	label.set_text("#Status", "Out")
+	setStatus(labelText .. " " .. "Out!")
 	state["CurrentState"] = "Pitch"
 	state["Outs"] = state["Outs"] + 1;
 	label.set_text("scoreboard#outs", state["Outs"])
@@ -129,9 +135,10 @@ local function out()
 	throw()
 end
 local function strike()
-	label.set_text("#Status", "Strike")
-	state["CurrentState"] = "Pitch"
 	state["Strikes"] = state["Strikes"] + 1
+	setStatus( "Strike ".. state["Strikes"])
+	state["CurrentState"] = "Pitch"
+
 	label.set_text("scoreboard#strikes", state["Strikes"])
 	if state["Strikes"] == 3 then
 		out();
@@ -141,7 +148,7 @@ local function strike()
 end
 
 local function homerun()
-	label.set_text("#Status", "HomeRun!")
+	setStatus( "HomeRun!")
 	state["CurrentState"] = "Pitch"
 	clearCount()
 	local bases = state["BaseStatus"];
@@ -153,7 +160,7 @@ local function homerun()
 end
 
 local function single()
-	label.set_text("#Status", "Single")
+	setStatus( "Single")
 	state["CurrentState"] = "Pitch"
 	clearCount()
 	local bases = state["BaseStatus"];
@@ -168,7 +175,7 @@ local function single()
 end
 
 local function double()
-	label.set_text("#Status", "Double")
+	setStatus( "Double")
 	state["CurrentState"] = "Pitch"
 	clearCount()
 	local bases = state["BaseStatus"];
@@ -182,7 +189,7 @@ end
 
 local function ball()
 	msg.post("go#dicescript", "clearDice", {player = M.otherPlayer()})
-	label.set_text("#Status", "Ball")
+	setStatus( "Ball")
 	state["Balls"] = state["Balls"] + 1
 	label.set_text("scoreboard#balls", state["Balls"])
 	if state["Balls"] == 4 then
@@ -229,7 +236,7 @@ function M.stateChange(changeType)
 		else
 			--Other player Roll to hit.
 			state["CurrentState"] = "MaybeHit"
-			label.set_text("#Status", "Good Pitch")
+			setStatus( "Good Pitch")
 			state["LastPitch"] = changeType;
 			msg.post("go#dicescript", "single", {player = M.otherPlayer()})
 		end
@@ -237,26 +244,28 @@ function M.stateChange(changeType)
 		if changeType < state["LastPitch"] then
 			strike()
 		else
-			state["CurrentState"] = "HitX"
-			label.set_text("#Status", "Hitting")
+			state["CurrentState"] = "Angle"
+			setStatus( "Hitting")
 			msg.post("go#dicescript", "double", {player = M.otherPlayer()})
 		end
 
-	elseif state["CurrentState"] == "HitX" then
+	elseif state["CurrentState"] == "Angle" then
 		if changeType <= 2 or  changeType >= 10 then
 			homerun()
 		else
 			state["HitX"] = changeType;
-			state["CurrentState"] = "HitY"
-			label.set_text("#Status", "Hitting")
+			state["CurrentState"] = "Distance"
+			setStatus( "Hitting")
 			msg.post("go#dicescript", "single", {player = M.otherPlayer()})
 		end
-	elseif state["CurrentState"] == "HitY" then
+	elseif state["CurrentState"] == "Distance" then
 		local hitX = state["HitX"];
+		setStatus( "Fielding")
 		if changeType == 6 then
 			homerun()
 		elseif changeType == 5 then
 			if hitX == 6 or hitX == 5 or hitX == 4 then
+				setStatus( "Caught")
 				out()
 			elseif hitX == 7 or hitX == 3 then
 				state["CurrentState"] = "Throw"
@@ -269,10 +278,11 @@ function M.stateChange(changeType)
 
 		elseif changeType == 4 then
 			if hitX == 5 then
+				setStatus( "Caught")
 				out()
 			elseif  hitX == 3 or hitX == 4 or hitX == 6 or hitX == 7 then
 				state["CurrentState"] = "Throw"
-				label.set_text("#Status", "Fielding")
+				setStatus( "Fielding")
 				throw()
 			elseif hitX == 8 then
 				single()
@@ -281,6 +291,7 @@ function M.stateChange(changeType)
 			end
 		elseif changeType == 3 then
 			if hitX == 3 or hitX == 4 or hitX == 6 or hitX == 7 then
+				setStatus( "Caught")
 				out()
 			elseif  hitX == 5 or hitX == 8 then
 				state["CurrentState"] = "Throw"
@@ -312,6 +323,7 @@ function M.stateChange(changeType)
 
 	elseif  state["CurrentState"] == "Throw" then
 		if changeType >= 4 then
+			setStatus( "Thrown")
 			out()
 		else
 			single()
